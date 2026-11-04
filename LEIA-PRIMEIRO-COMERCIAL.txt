@@ -1,0 +1,28 @@
+NODO — RECONSTRUÇÃO COMERCIAL (BASE DE DESENVOLVIMENTO)
+
+Esta entrega contém a versão de desenvolvimento reorganizada para a identidade comercial NODO.
+
+O QUE JÁ FOI ALTERADO
+- Interface desktop com visual branco, preto e cinza.
+- Marca N minimalista no app e nos arquivos de ícone.
+- Removidos o gerador de prompts de IA do desktop, painel web e CLI, além das telas de atualizações, reversão de atualização e controle do PC.
+- Corrigido o erro de compilação std::string::isEmpty() para std::string::empty().
+- Página de downloads com seletor de sistema operacional e versão em downloads/.
+
+O QUE ESTA ENTREGA NÃO É
+- Não é ainda o instalador final para clientes.
+- Não contém binários Windows/macOS/Linux assinados.
+- A página de downloads não tem arquivos publicados: downloads/releases.json começa vazio de propósito.
+- A interface Qt não pôde ser compilada neste ambiente porque Qt 6 não está instalado. O alvo de linha de comando foi compilado com sucesso.
+
+PRÓXIMO PASSO TÉCNICO
+Instale Qt 6 e CMake no Mac e execute ./compilar.sh. Depois teste o Nodo.app. Para vender, gere os pacotes por plataforma, assine/notarize os instaladores e hospede os arquivos HTTPS; veja COMERCIALIZACAO.md.
+
+IMPORTANTE SOBRE CÓDIGO-FONTE
+Este ZIP é o pacote de desenvolvimento e, portanto, contém fontes. Não o entregue aos clientes. Os instaladores finais devem conter somente os binários, bibliotecas de runtime necessárias, recursos e licença/avisos de terceiros. Mesmo binários C++ podem sofrer engenharia reversa; não embuta senhas, chaves privadas ou segredos.
+
+REGISTRO DE CONTINUIDADE
+Leia ITINERARIO-CONTINUIDADE.md antes de continuar o desenvolvimento. Esse arquivo registra o que foi alterado, o que ainda nao foi validado e os proximos passos para outra IA ou desenvolvedor retomar o projeto.
+
+QT 6 E INSTALADORES
+Qt 6.5+ Widgets agora e obrigatorio para o build desktop padrao. Consulte COMERCIALIZACAO.md e execute ./compilar.sh no Mac/Linux. O workflow .github/workflows/build-installers.yml gera artefatos em runners limpos para Windows, macOS e Ubuntu. Os artefatos ainda precisam de testes e assinatura antes da venda.

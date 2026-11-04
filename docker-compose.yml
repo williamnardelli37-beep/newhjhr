@@ -1,0 +1,23 @@
+name: nodo
+services:
+  nodo:
+    build: .
+    image: nodo:3.0.0
+    init: true
+    restart: unless-stopped
+    user: "${NODO_UID:-1000}:${NODO_GID:-1000}"
+    ports:
+      # So este PC. A porta de fora e a de dentro sao a mesma (a que esta no nodo.conf do site).
+      # Para a internet: proxy HTTPS na frente (veja SEGURANCA.md e DOCKER.md).
+      - "127.0.0.1:${NODO_PORT:-7070}:${NODO_PORT:-7070}"
+    volumes:
+      - "${SITE_DIR:-./site}:/site"  # unica pasta que o Nodo enxerga: o site, o nodo.conf e o banco
+    read_only: true                  # o resto do sistema do conteiner e somente leitura
+    tmpfs:
+      - /tmp:size=16m,noexec,nosuid
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 512m
+    cpus: 1.0
