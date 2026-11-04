@@ -23,7 +23,7 @@ if(APPLE)
   endif()
 endif()
 
-project(Nodo VERSION 3.0.1 LANGUAGES CXX)
+project(Nodo VERSION 3.0.2 LANGUAGES CXX)
 include(GNUInstallDirs)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

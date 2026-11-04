@@ -21,7 +21,7 @@ jobs:
             artifact: NODO-Windows-x64
             cmake_args: ''
           # macOS: UM app universal (Intel x86_64 + Apple Silicon arm64). O Qt "clang_64" oficial e universal.
-          - os: macos-14
+          - os: macos-15
             qt_arch: clang_64
             artifact: NODO-macOS-universal
             cmake_args: '-DNODO_MAC_ARCH=universal'
@@ -32,13 +32,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: jurplel/install-qt-action@v4
+      - uses: jurplel/install-qt-action@v4.3.0
         with:
           version: '6.8.3'
           host: ${{ runner.os == 'Windows' && 'windows' || runner.os == 'macOS' && 'mac' || 'linux' }}
           target: 'desktop'
           arch: ${{ matrix.qt_arch }}
-          modules: 'qtbase'
           cache: true
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DNODO_BUILD_GUI=ON ${{ matrix.cmake_args }}

@@ -74,7 +74,7 @@ O app sai **universal** por padrão (`-DNODO_MAC_ARCH=universal`, alvo mínimo m
 Para gerar DMG e PKG (confere que todas as bibliotecas do `.app` têm as mesmas arquiteturas):
 
 ```sh
-VERSAO=3.0.1 sh instaladores/mac/montar-dmg.sh   # gera Nodo-3.0.1-mac-universal.dmg/.pkg
+VERSAO=3.0.2 sh instaladores/mac/montar-dmg.sh   # gera Nodo-3.0.2-mac-universal.dmg/.pkg
 ```
 
 Verificar: `lipo -archs build/Nodo.app/Contents/MacOS/Nodo` (universal: `x86_64 arm64`).

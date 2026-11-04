@@ -1,4 +1,4 @@
-NODO COMERCIAL 3.0.1 — PACOTE DE DESENVOLVIMENTO
+NODO COMERCIAL 3.0.2 — PACOTE DE DESENVOLVIMENTO
 
 IMPORTANTE: esta pasta tem a reconstrução comercial mais recente. NÃO use a pasta antiga ~/Downloads/nodo-3-mac para compilar: ela contém a versão anterior. Extraia este ZIP em uma pasta nova e trabalhe somente nela.
 
@@ -10,7 +10,7 @@ NO MAC:
 1. Instale o CMake (o Qt o script resolve sozinho):
    brew install cmake
 2. Entre nesta pasta extraída:
-   cd ~/Downloads/NODO-COMERCIAL-3.0.1
+   cd ~/Downloads/NODO-COMERCIAL-3.0.2
 3. Compile o app gráfico:
    chmod +x compilar.sh
    ./compilar.sh              (universal: Intel + Apple Silicon; é o padrão)
@@ -22,8 +22,8 @@ NO MAC:
 4. O app fica em build/Nodo.app. Abra com:
    open build/Nodo.app
 5. Gere o pacote (DMG e PKG) com conferência automática de que todas as bibliotecas têm Intel + Apple Silicon:
-   VERSAO=3.0.1 sh instaladores/mac/montar-dmg.sh
-   O nome do arquivo mostra a arquitetura: Nodo-3.0.1-mac-universal.dmg
+   VERSAO=3.0.2 sh instaladores/mac/montar-dmg.sh
+   O nome do arquivo mostra a arquitetura: Nodo-3.0.2-mac-universal.dmg
 
 COMO CONFERIR:
    lipo -archs build/Nodo.app/Contents/MacOS/Nodo

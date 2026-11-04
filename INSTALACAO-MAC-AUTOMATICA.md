@@ -7,7 +7,7 @@ O computador do usuário final não precisa instalar Homebrew, CMake, Qt, Xcode 
 1. Envie o repositório para o GitHub.
 2. Confirme que o workflow `Build NODO desktop installers` está ativo.
 3. Atualize `project(VERSION ...)` no `CMakeLists.txt` para a versão que será publicada.
-4. Crie e envie uma tag, por exemplo: `git tag v3.0.1 && git push origin v3.0.1`.
+4. Crie e envie uma tag, por exemplo: `git tag v3.0.2 && git push origin v3.0.2`.
 5. O workflow compila Windows, macOS e Linux; o job `publish-release` anexa os instaladores à GitHub Release.
 
 ## Instalação no Mac

@@ -5,7 +5,7 @@
 # Para assinar com certificado Apple: CODESIGN_IDENTITY="Developer ID Application: Seu Nome (TEAMID)" ... (sem isso, assinatura local "ad hoc").
 set -e
 cd "$(dirname "$0")/../.."
-VERSAO="${VERSAO:-3.0.1}"
+VERSAO="${VERSAO:-3.0.2}"
 ID="${CODESIGN_IDENTITY:--}"
 APP="build/Nodo.app"
 [ -d "$APP" ] || { echo "Compile antes: cmake -S . -B build && cmake --build build"; exit 1; }
