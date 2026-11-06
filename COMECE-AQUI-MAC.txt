@@ -1,0 +1,40 @@
+NODO COMERCIAL 3.0.5 — PACOTE DE DESENVOLVIMENTO
+
+IMPORTANTE: esta pasta tem a reconstrução comercial mais recente. NÃO use a pasta antiga ~/Downloads/nodo-3-mac para compilar: ela contém a versão anterior. Extraia este ZIP em uma pasta nova e trabalhe somente nela.
+
+INTEL E APPLE SILICON
+Por padrão o app agora é compilado UNIVERSAL: um único Nodo.app que roda em Mac com processador Intel e em Mac Apple Silicon (M1/M2/M3/M4).
+Esta pasta não traz mais os binários antigos (build/ e dist/): eles eram só Apple Silicon (arm64) e não abrem em Intel.
+
+NO MAC:
+1. Instale o CMake (o Qt o script resolve sozinho):
+   brew install cmake
+2. Entre nesta pasta extraída:
+   cd ~/Downloads/NODO-COMERCIAL-3.0.5
+3. Compile o app gráfico:
+   chmod +x compilar.sh
+   ./compilar.sh              (universal: Intel + Apple Silicon; é o padrão)
+   ./compilar.sh intel        (só Intel)
+   ./compilar.sh arm          (só Apple Silicon)
+   O Qt do Homebrew num Mac Apple Silicon é só arm64 e NÃO serve para gerar Intel. O script procura um Qt que sirva
+   (variável NODO_QT, depois ~/Qt/6.*/macos do instalador oficial, depois o Homebrew) e, se nenhum servir, instala
+   sozinho o Qt oficial universal em ~/Qt (download grande, só na primeira vez).
+4. O app fica em build/Nodo.app. Abra com:
+   open build/Nodo.app
+5. Gere o pacote (DMG e PKG) com conferência automática de que todas as bibliotecas têm Intel + Apple Silicon:
+   VERSAO=3.0.5 sh instaladores/mac/montar-dmg.sh
+   O nome do arquivo mostra a arquitetura: Nodo-3.0.5-mac-universal.dmg
+
+COMO CONFERIR:
+   lipo -archs build/Nodo.app/Contents/MacOS/Nodo
+   Universal mostra: x86_64 arm64      Só Intel mostra: x86_64
+
+Windows e Linux: já eram para processadores Intel/AMD (x64 / x86_64); nada mudou para eles.
+Docker: o Dockerfile compila dentro do contêiner e funciona em Intel/AMD sem alteração.
+
+ESTADO: o pacote de desenvolvimento contém código-fonte. NÃO distribuir este ZIP a clientes. Os instaladores comerciais ainda precisam de testes, assinatura/notarização e publicação.
+
+Leia ITINERARIO-CONTINUIDADE.md antes de continuar ou entregar a outra IA.
+
+Compatibilidade multiplataforma: consulte MATRIZ-COMPATIBILIDADE.md.
+Para o Mac Monterey (12), o pipeline usa Qt 6.8.3 e valida o mínimo de todos os binários do .app.

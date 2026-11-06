@@ -1,0 +1,15 @@
+build/
+*.app/
+*.dmg
+*.exe
+*.msi
+*.AppImage
+*.deb
+*.rpm
+nodo
+nodo-app
+nodo.exe
+nodo-cli
+nodo.conf
+nodo-dados/
+.DS_Store
