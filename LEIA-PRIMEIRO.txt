@@ -1,0 +1,4 @@
+MAC - 2 PASSOS
+1) Abra o Terminal, digite  sh  (com um espaco no fim), arraste o arquivo INSTALAR-NODO.command para a janela e aperte Enter.
+2) Espere. No fim o Nodo abre sozinho e fica em Aplicativos.
+Se o Mac pedir senha ou o Homebrew, siga o que a tela disser. Se der erro, me mande um print.

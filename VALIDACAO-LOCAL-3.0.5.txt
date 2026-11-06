@@ -1,0 +1,23 @@
+NODO COMERCIAL 3.0.5 — RELATORIO DE VALIDACAO LOCAL
+Data: 2026-11-04
+
+APROVADO NESTE AMBIENTE
+- Sintaxe YAML do workflow: valido (PyYAML conseguiu carregar os 5 jobs).
+- Sintaxe dos scripts shell: bash -n aprovado.
+- Sintaxe dos scripts Python: py_compile aprovado.
+- Configuracao CMake CLI sem Qt: aprovada.
+- Compilacao C++ do CLI neste Linux: aprovada (GNU C++ 14.2).
+- Smoke test funcional do CLI/servidor: aprovado.
+  * nodo integrar cria nodo.conf e chave administrativa.
+  * servidor inicia e /api/_saude responde HTTP 200.
+  * gravacao autenticada de produto retorna HTTP 201.
+
+VALIDACOES QUE PRECISAM DOS RUNNERS / SISTEMAS REAIS
+- macOS: build Qt GUI universal x86_64 + arm64, deploy, verificacao Mach-O e DMG/PKG. O workflow faz esses testes no runner macOS 26 Intel.
+- Windows moderno: build Qt 6.8.3/MSVC 2022 e smoke tests no runner Windows 2022.
+- Windows legado: build Qt 5.15.2/MinGW 8.1 x86 e smoke tests no runner Windows 2022. O runner moderno nao substitui teste real em Windows 7 SP1/8.1.
+- Linux: GUI Qt offscreen, AppImage, DEB e tar.gz no runner Ubuntu 22.04.
+- macOS 12: deployment target e arquiteturas sao inspecionados em todos os binarios Mach-O, mas ainda e necessario executar o app num Mac/VM macOS 12 real.
+
+IMPORTANTE
+Nenhum build multiplataforma foi publicado por este pacote. O script PUBLICAR-GITHUB-3.0.5.sh exige a palavra PUBLICAR antes de enviar commit e tag. O Release so e publicado se todos os jobs macOS, Windows moderno, Windows legado e Linux passarem.
