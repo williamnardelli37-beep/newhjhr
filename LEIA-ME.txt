@@ -1,0 +1,88 @@
+NODO 3 v3.0.0 - LIQUID GLASS, INSTALADOR E VARIOS SITES
+  1. Visual novo (liquid glass) no app e no painel /admin, com tema claro e escuro automatico.
+  2. Instalador de verdade: Windows (Nodo-3.0.0-Setup.exe), Mac (.dmg ou .pkg), Linux (.deb para Ubuntu/Mint/Debian, ou .tar.gz).
+  3. Varios sites ao mesmo tempo (ate 32): cada um em um processo proprio, com pasta, porta e chave proprias.
+     App: aba "Projetos".   Terminal:
+       nodo projetos adicionar ~/loja            (cria o que falta e escolhe uma porta livre)
+       nodo projetos adicionar ~/blog meu-blog
+       nodo projetos iniciar todos               (ou: iniciar loja)
+       nodo projetos                             (lista: nome, porta, ligado/desligado, pasta)
+       nodo projetos parar blog   |   nodo projetos porta loja 7100   |   nodo projetos remover blog
+     Os sites ligados continuam funcionando quando voce fecha o app.
+  Detalhes e o que mudou na seguranca: ATUALIZACAO-v3.0.0.txt
+
+NODO 2 v1.8.0 - REGRAS SEM DOR DE CABECA
+  Regras publicas do site ficam em nodo.regras (sem segredo, vai pro Git) e valem em ate 2 s, sem reiniciar.
+  A chave e a porta continuam so no nodo.conf. Detalhes: ATUALIZACAO-v1.8.0.txt
+
+NODO 3 - server for life
+Transforma qualquer PC em servidor + banco de dados. Mac, Linux e Windows.
+
+INSTALAR
+  Instalador (recomendado): Windows = Nodo-3.0.0-Setup.exe | Mac = Nodo-3.0.0-mac.dmg (arraste para Aplicativos) ou .pkg
+    Linux = sudo apt install ./nodo_3.0.0_amd64.deb   (ou o .tar.gz: sh instalar.sh)
+  Pelo codigo-fonte:
+    Mac / Linux : sh compilar.sh
+    Windows     : compilar-windows.bat   (precisa do MSYS2)
+    Automatico  : suba esta pasta no GitHub e rode Actions > "Build Nodo" (gera os 3 instaladores)
+
+NOVIDADES DA 1.5 (mantidas na linha 1.6.0)
+  - Abas "Monitor de uso" e "Prompt para IA" no app (e no painel /admin).
+  - nodo.js mais robusto: valida nomes e ids, trata queda de rede, timeout e resposta que nao e JSON (NodoErro).
+  - Painel com login por token temporario; CORS por lista de sites (origens=...).
+  - App com janela: ao escolher uma pasta-pai, procura nodo.conf automaticamente e abre o projeto encontrado; a chave e lida localmente, sem precisar copiar codigo ou digita-la.
+  - Escrita publica exige campos.<colecao>=campo:limite; servidor novo escuta so em 127.0.0.1.
+  - Replicacao com resolucao de conflitos (vale o mais recente), apagados que nao ressuscitam e fila unica.
+  - Testes automaticos: python3 testes/rodar.py build/nodo   e   node testes/sdk.mjs build/nodo
+
+USAR (app com janela)
+  Inicio > "Escolher pasta do projeto" (a pasta do seu site, com index.html) > "Ligar".
+  Fechar a janela mantem o servidor ligado. "Sair" desliga.
+
+LIGAR O SEU SITE AO NODO (passo a passo)
+  Abra o guia: botao "Guia de integracao" no app, ou http://localhost:7070/guia com o Nodo ligado
+  (tambem em guia.html, nesta pasta). Tem receitas prontas: formulario de contato, lista de produtos,
+  mural, site em outra hospedagem, filtros e API. Exemplo funcionando em exemplos/contato.
+
+PUBLICAR (aba "Publicar" do app)
+  1. Tailscale: HTTPS e acesso de qualquer lugar para o servidor (Entrar > Publicar na internet).
+  2. Git: vincule o repositorio e envie (nunca envia a chave). Tambem atualiza o servidor (deploy).
+  3. Vercel: publica o site a cada push, busca/compra o dominio .com e liga ao projeto.
+  Passo a passo completo no guia (/guia).
+
+USAR (terminal)
+  nodo integrar <pasta>   prepara a pasta (cria nodo.conf com a chave, nodo-dados/ e nodo.js)
+  nodo iniciar  [pasta]   liga em segundo plano
+  nodo rodar    [pasta]   liga neste terminal
+  nodo parar    [pasta]   desliga
+  nodo status   [pasta]   mostra enderecos
+  nodo verificar [pasta]  auditoria de seguranca (rode antes de publicar)
+  nodo backup   [pasta]   copia do banco (tambem automatico, 1 por dia, guarda 7)
+  nodo restaurar <arquivo.json> [pasta]
+  nodo chave    [pasta]   nova chave de administrador
+  nodo monitor  [pasta] [--seguir]   uso do servidor (requisicoes, erros, CPU, memoria, replicacao)
+  nodo prompt "descricao" [--stack html|react|vue]   prompt para uma IA criar o projeto adaptado ao Nodo
+  nodo guia     [pasta]   resumo da integracao
+  nodo git vincular <url> | git enviar ["msg"] | implantar | tailscale status|publicar|desligar | apontar <url|local> | readme
+
+COLOCAR NA INTERNET: leia SEGURANCA.md antes. Resumo: use HTTPS (Caddy) na frente do Nodo.
+
+
+NODO 2 v1.6.2 — AJUDA E AGENTE GUIADO
+- Interface renovada com navegação e cartões inspirados no estilo visual do iPhone/macOS.
+- Tela de carregamento “Nodo by Loop Life in Server”, identificada como Sistema v1.6.2.
+- Aba Atualizações: recebe arquivos .zip e .nodo-update, guarda-os em uma pasta local de entrada e calcula SHA-256.
+- Pacotes recebidos NÃO são executados nem instalados automaticamente. A instalação automática e a assinatura criptográfica exigem uma versão futura com validação de origem e rollback.
+- Para testar, abra Nodo > Atualizações > Receber arquivo de atualização e escolha o pacote de teste fornecido junto com este projeto.
+
+
+NOVIDADES v1.6.2 — AJUDA E AGENTE GUIADO
+- Nova aba Agente de ajuda com diagnóstico inicial por assunto: configuração, rede/dispositivos, site, banco e atualizações.
+- Gera e copia um prompt seguro para usar numa IA externa.
+- O agente desta versão é local e baseado em regras; não é um modelo generativo conectado e não envia os dados do problema para a internet.
+- A aba Atualizações continua apenas recebendo/armazenando pacotes; não instala automaticamente.
+
+ATUALIZACOES POR ZIP (v1.6.2)
+  Na aba Atualizações, clique em "Enviar ZIP de atualização…" e selecione o pacote de teste.
+  A janela de progresso acompanha a cópia. O Nodo guarda o ZIP intacto; não extrai nem executa.
+  Esta função testa recebimento e armazenamento, não a instalação automática do pacote.

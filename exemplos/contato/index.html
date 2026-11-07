@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exemplo Nodo: contato e mural</title>
+<style>body{font:16px system-ui;max-width:560px;margin:32px auto;padding:0 16px}input,textarea,button{font:inherit;width:100%;padding:10px;margin:6px 0;box-sizing:border-box}button{background:#5C16EA;color:#fff;border:0;border-radius:8px;cursor:pointer}.m{border-bottom:1px solid #ddd;padding:8px 0}</style>
+</head>
+<body>
+<h1>Mural</h1>
+<form id="f">
+  <input name="nome" placeholder="Seu nome" required maxlength="40">
+  <textarea name="texto" placeholder="Sua mensagem" required maxlength="500"></textarea>
+  <button>Publicar</button>
+</form>
+<p id="r" role="status"></p>
+<div id="lista"></div>
+
+<!-- nodo.js e servido pelo proprio Nodo. Em outro dominio: <script src="https://seu-servidor/nodo.js"> -->
+<script src="nodo.js"></script>
+<script>
+// No nodo.conf desta pasta:  leitura_publica=mural  escrita_publica=mural  campos.mural=nome:40,texto:500  max_docs.mural=5000
+var mural = Nodo.colecao('mural');
+function carregar() {
+  mural.listar({ limite: 100 }).then(function (itens) {
+    var box = document.getElementById('lista');
+    box.textContent = '';
+    itens.forEach(function (m) {
+      var d = document.createElement('div');
+      d.className = 'm';
+      var b = document.createElement('b');
+      b.textContent = m.nome + ': ';          // textContent: seguro contra HTML enviado por visitantes
+      d.append(b, document.createTextNode(m.texto));
+      box.append(d);
+    });
+  }).catch(function (e) { document.getElementById('r').textContent = e.rede ? 'Servidor fora do ar. Tentando de novo...' : 'Erro ao carregar: ' + e.message; });
+}
+document.getElementById('f').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var dados = Object.fromEntries(new FormData(e.target));
+  mural.criar(dados).then(function () { e.target.reset(); document.getElementById('r').textContent = ''; carregar(); })
+    .catch(function (err) {
+      // err e um NodoErro: .rede (nao chegou ao servidor), .codigo (estavel) e .message (texto para mostrar)
+      document.getElementById('r').textContent = err.rede ? 'Servidor fora do ar. Tente de novo em instantes.' : err.codigo === 'muitas_requisicoes' ? 'Muitos envios. Aguarde um minuto.' : 'Nao foi possivel enviar: ' + err.message;
+    });
+});
+carregar(); setInterval(carregar, 5000);
+</script>
+</body>
+</html>
