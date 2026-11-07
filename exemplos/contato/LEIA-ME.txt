@@ -1,0 +1,9 @@
+Exemplo de integracao (mural). Passos:
+1. nodo integrar exemplos/contato        (cria nodo.conf com a chave)
+2. Abra exemplos/contato/nodo.conf e ajuste estas linhas:
+     leitura_publica=mural
+     escrita_publica=mural
+     campos.mural=nome:40,texto:500
+     max_docs.mural=5000
+3. nodo iniciar exemplos/contato   e abra http://localhost:7070
+Mais receitas: http://localhost:7070/guia

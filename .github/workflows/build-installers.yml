@@ -1,0 +1,179 @@
+name: Build NODO 3.0.7 - macOS, Windows and Linux
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v3.0.7*'
+
+permissions:
+  contents: write
+
+jobs:
+  macos:
+    name: macOS universal (Intel + Apple Silicon)
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt 6.8.3
+        uses: jurplel/install-qt-action@v4.5.0
+        with:
+          version: '6.8.3'
+          host: mac
+          target: desktop
+          arch: clang_64
+          cache: true
+      - name: Configure
+        run: >-
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          -DNODO_BUILD_GUI=ON -DNODO_QT_MAJOR=6
+          -DNODO_MAC_ARCH=universal
+          -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
+          -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0
+          -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+      - name: Test CLI/server
+        run: python3 testes/platform_smoke.py build/nodo
+      - name: Test GUI
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          export QT_QPA_PLATFORM_PLUGIN_PATH="$QT_ROOT_DIR/plugins/platforms"
+          export QT_PLUGIN_PATH="$QT_ROOT_DIR/plugins"
+          python3 testes/desktop_smoke.py build/Nodo.app/Contents/MacOS/Nodo
+      - name: Verify universal binary
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          binary = "build/Nodo.app/Contents/MacOS/Nodo"
+          archs = set(subprocess.check_output(["lipo", "-archs", binary], text=True).split())
+          required = {"x86_64", "arm64"}
+          if not required.issubset(archs):
+              raise SystemExit(f"App não é universal: {sorted(archs)}")
+          PY
+      - name: Create DMG
+        run: OUT="$GITHUB_WORKSPACE/build" VERSAO=3.0.7 sh instaladores/mac/montar-dmg.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NODO-macOS
+          path: build/Nodo-3.0.7-mac-universal.dmg
+          if-no-files-found: error
+          retention-days: 30
+
+  windows:
+    name: Windows 10/11 x64
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt 6.8.3 / MSVC 2022
+        uses: jurplel/install-qt-action@v4.5.0
+        with:
+          version: '6.8.3'
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          cache: true
+      - name: Configure
+        shell: pwsh
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DNODO_BUILD_GUI=ON -DNODO_QT_MAJOR=6 -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+      - name: Test CLI/server
+        shell: pwsh
+        run: |
+          $cli = Get-ChildItem build -Recurse -File -Filter nodo.exe | Select-Object -First 1
+          if (!$cli) { throw 'nodo.exe não foi gerado.' }
+          python testes/platform_smoke.py $cli.FullName
+      - name: Test GUI
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          $env:QT_QPA_PLATFORM_PLUGIN_PATH = Join-Path $env:QT_ROOT_DIR 'plugins/platforms'
+          $env:QT_PLUGIN_PATH = Join-Path $env:QT_ROOT_DIR 'plugins'
+          $gui = Get-ChildItem build -Recurse -File -Filter nodo-app.exe | Select-Object -First 1
+          if (!$gui) { throw 'nodo-app.exe não foi gerado.' }
+          python testes/desktop_smoke.py $gui.FullName
+      - name: Package Windows ZIP
+        shell: pwsh
+        run: ./instaladores/windows/empacotar.ps1 -Version 3.0.7 -Flavor modern-10-11
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NODO-Windows
+          path: build/NODO-3.0.7-Windows-modern-10-11-x64.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  linux:
+    name: Linux x86_64
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install AppImage prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 file patchelf desktop-file-utils
+      - name: Install Qt 6.8.3
+        uses: jurplel/install-qt-action@v4.5.0
+        with:
+          version: '6.8.3'
+          host: linux
+          target: desktop
+          arch: linux_gcc_64
+          cache: true
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DNODO_BUILD_GUI=ON -DNODO_QT_MAJOR=6 -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+      - name: Test CLI/server
+        run: python3 testes/platform_smoke.py build/nodo
+      - name: Test GUI
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          export QT_QPA_PLATFORM_PLUGIN_PATH="$QT_ROOT_DIR/plugins/platforms"
+          export QT_PLUGIN_PATH="$QT_ROOT_DIR/plugins"
+          python3 testes/desktop_smoke.py build/nodo-app
+      - name: Create AppImage
+        run: |
+          QT_ROOT_DIR="$QT_ROOT_DIR" VERSION=3.0.7 bash instaladores/linux/montar-appimage.sh
+          test -s build/NODO-3.0.7-Linux-x86_64.AppImage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NODO-Linux
+          path: build/NODO-3.0.7-Linux-x86_64.AppImage
+          if-no-files-found: error
+          retention-days: 30
+
+  publish-release:
+    name: Publish exactly three installers
+    if: startsWith(github.ref, 'refs/tags/v3.0.7')
+    needs: [macos, windows, linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download platform installers
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Verify the three release files
+        run: |
+          test -s release-assets/Nodo-3.0.7-mac-universal.dmg
+          test -s release-assets/NODO-3.0.7-Windows-modern-10-11-x64.zip
+          test -s release-assets/NODO-3.0.7-Linux-x86_64.AppImage
+          test "$(find release-assets -maxdepth 1 -type f | wc -l)" -eq 3
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: NODO 3.0.7
+          body: |
+            NODO 3.0.7 para macOS, Windows e Linux.
+            
+            - macOS: universal para Intel e Apple Silicon.
+            - Windows: x64.
+            - Linux: x86_64 AppImage.
+          draft: false
+          prerelease: false
+          files: |
+            release-assets/Nodo-3.0.7-mac-universal.dmg
+            release-assets/NODO-3.0.7-Windows-modern-10-11-x64.zip
+            release-assets/NODO-3.0.7-Linux-x86_64.AppImage
