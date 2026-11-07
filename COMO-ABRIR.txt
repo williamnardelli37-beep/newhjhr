@@ -1,0 +1,39 @@
+NODO by Loop Web — COMO ABRIR NA PRIMEIRA VEZ
+
+O Nodo ainda não tem certificado pago da Apple nem da Microsoft (estamos
+providenciando). Por isso, na primeira vez que você abrir, o Mac e o
+Windows mostram um aviso de segurança. Isso é normal: o programa não tem
+vírus, só não tem esse "selo" ainda. Depois da primeira vez, abre normal,
+com duplo clique.
+
+============================
+MAC
+============================
+1. Dê dois cliques no Nodo como de costume.
+2. Vai aparecer um aviso dizendo que o Nodo é de um "desenvolvedor não
+   identificado" (ou que o Mac "não pode verificar" o app).
+3. Clique em OK para fechar esse aviso.
+4. Agora clique com o BOTÃO DIREITO (ou, no trackpad, dois dedos) em cima
+   do ícone do Nodo e escolha "Abrir".
+5. Vai aparecer o mesmo aviso, mas agora com um botão "Abrir mesmo assim".
+   Clique nele.
+6. Pronto. Da próxima vez, é só dar dois cliques normalmente.
+
+Se o seu Mac pedir a senha do computador nesse processo, pode digitar —
+é só o próprio Mac confirmando que foi você quem autorizou.
+
+============================
+WINDOWS
+============================
+1. Dê dois cliques no instalador ou no Nodo.
+2. Vai aparecer uma tela azul: "O Windows protegeu seu PC".
+3. Clique em "Mais informações" (texto pequeno, dentro da tela azul).
+4. Vai aparecer um botão novo: "Executar assim mesmo". Clique nele.
+5. Pronto. Da próxima vez, o Windows não pergunta de novo para esse
+   mesmo arquivo.
+
+============================
+Dúvidas
+============================
+Se aparecer qualquer aviso diferente destes, ou se tiver dúvida, chame a
+Loop Web antes de continuar.

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Nodo Comercial
+Comment=Servidor local, projetos e banco de dados
+Exec=nodo-app
+Icon=nodo
+Terminal=false
+Categories=Development;Network;Utility;
+StartupNotify=true

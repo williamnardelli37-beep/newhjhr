@@ -1,0 +1,23 @@
+NODO COMERCIAL 3.0.5 — MATRIZ MULTIPLATAFORMA
+
+ANTES DE PUBLICAR
+1. Extraia o ZIP para ~/Downloads/NODO-COMERCIAL-3.0.5.
+2. Leia MATRIZ-COMPATIBILIDADE.md e confira a lista de alteracoes.
+3. O script PUBLICAR-GITHUB-3.0.5.sh cria um clone limpo do repositorio, mostra as alteracoes e pede que voce digite PUBLICAR antes de enviar qualquer commit/tag.
+4. Para iniciar: bash ~/Downloads/NODO-COMERCIAL-3.0.5/PUBLICAR-GITHUB-3.0.5.sh
+5. O script nao sobrescreve uma tag v3.0.5 existente. Se ela ja existir, pare e escolha uma nova versao antes de publicar.
+
+MATRIZ CONFIGURADA
+- macOS 12+: Qt 6.8.3, universal Intel x86_64 + Apple Silicon arm64, deployment target 12.0, DMG visual e PKG.
+- Windows 7 SP1 / 8.1 / Windows 10 antigo: Qt 5.15.2 + MinGW 8.1, pacote x86.
+- Windows 10 1809+ / 11: Qt 6.8.3 + MSVC 2022, pacote x64.
+- Linux desktop moderno x86_64: Qt 6.8.3, AppImage + DEB + tar.gz, base Ubuntu 22.04 / glibc 2.35.
+
+VALIDACAO
+O workflow compila CLI e GUI, executa smoke test HTTP/autenticacao, inicia a interface via Qt offscreen e valida o bundle universal/minimo macOS 12. O Release so e criado quando todos os quatro jobs passam.
+
+LIMITES IMPORTANTES
+- Nao e correto prometer compatibilidade com toda distribuicao Linux; veja os limites de glibc e arquitetura na matriz.
+- Windows 7/8.1 requer testes em VM ou hardware real. O runner atual do GitHub nao executa esses sistemas.
+- A verificacao Mach-O confirma arquitetura e deployment target; ela nao substitui um teste real num Mac com macOS 12.
+- Assinatura/notarizacao Apple e assinatura de codigo Windows exigem certificados do proprietario.
